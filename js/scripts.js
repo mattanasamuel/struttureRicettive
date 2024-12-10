@@ -10,7 +10,7 @@ let tabella = document.getElementById('tabella');
 let carica = document.getElementById('btnLoad')
 carica.addEventListener("click", loadStrutture)
 
-//tentativo
+//tentativo numero 2
 
 
 async function loadInitialData() {
