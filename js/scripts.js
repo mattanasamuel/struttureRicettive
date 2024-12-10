@@ -10,7 +10,6 @@ let tabella = document.getElementById('tabella');
 let carica = document.getElementById('btnLoad')
 carica.addEventListener("click", loadStrutture)
 
-//tentativo numero 2
 
 
 async function loadInitialData() {
@@ -55,6 +54,7 @@ async function loadInitialData() {
 function loadComuni(){
   selComune.innerHTML = ""
   listaComuni = []
+
   for(const struttura of strutture)
   {
       if(struttura.Provincia == selProvincia.value && !listaComuni.includes(struttura.Comune))
@@ -62,12 +62,6 @@ function loadComuni(){
         //console.log(struttura.Provincia)
         listaComuni.push(struttura.Comune)
       }
-      /*
-      else
-      {
-        console.log("no " + struttura.Provincia)
-      }
-        */
   }
   console.log(listaComuni)
   for(const comune of listaComuni)
