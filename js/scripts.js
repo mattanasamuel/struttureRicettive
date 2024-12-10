@@ -89,31 +89,49 @@ function loadComuni(){
 }
 
 
-
-
 function loadStrutture(){
   tabella.innerHTML = ""
   listaStrutture = []
   for(let struttura of strutture)
   {
-    if(struttura.Provincia == selProvincia.value || selProvincia.value == "tutte")
+    let aggiungi = true;
+    if(selProvincia.value != struttura.Provincia && selProvincia.value != "tutte")
+      aggiungi = false;
+    if(selComune.value != struttura.Comune && selComune != "tutti")
+      aggiungi = false;
+    if(ariaCondizionata.checked == true && struttura.ariaCondizionata == "No")
+      aggiungi = false;
+    if(piscina.checked == true && struttura.piscina == "No")
+      aggiungi = false;
+    let opzioneSelezionata;
+    for(let opzione of animali)
     {
-      if(struttura.Comune == selComune.value || selComune.value == "tutti") //se il valore della option è su "tutti", se la struttura fa parte della provincia selezionata viene caricata ugualmente, altrimenti viene verificata anche se il suo comune corrisponde al comune selezionato
+      if(opzione.checked)
       {
-        switch(piscina.checked)
-        {
-          case true:
-            if(struttura.piscina == "Si")
-            {
-
-            }
-        }
-
-
-        listaStrutture.push(struttura);
+        opzioneSelezionata = opzione;
       }
     }
+    //console.log(opzioneSelezionata)
+    switch(opzioneSelezionata.value)
+    {
+      case "Si":
+        if(struttura.animaliAmmessi == "No")
+          aggiungi = false;
+        break;
+      
+      case "No":
+        if(struttura.animaliAmmessi == "Si")
+          aggiungi = false;
+        break;
+    }
+    if(aggiungi)
+      listaStrutture.push(struttura);
   }
+
+  console.log(listaStrutture)
+
+
+
 //ora è necessario creare la tabella dinamica
 for(let struttura of listaStrutture)
 {
@@ -145,20 +163,11 @@ else if(listaStrutture.length > 0)
 {
   risultati.style.color = "green"
 }
-
-
-
-
-
-
-
-
-
-
 }
 
 
 
 
 
-loadInitialData();
+
+loadInitialData()
