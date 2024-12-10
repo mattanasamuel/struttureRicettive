@@ -88,6 +88,16 @@ function loadComuni(){
 function loadStrutture(){
   tabella.innerHTML = ""
   listaStrutture = []
+  let opzioneSelezionata
+  for(let opzione of animaliAmmessi)
+  {
+    if(opzione.checked)
+    {
+      opzioneSelezionata = opzione;
+    }
+  }
+  console.log(opzioneSelezionata.value)
+
   for(let struttura of strutture)
   {
     if(struttura.Provincia == selProvincia.value)
@@ -107,17 +117,24 @@ function loadStrutture(){
             aggiungi = false;
           }
         }
-        /*
-        let opzioneSelezionata
-        for(let opzione of animaliAmmessi)
-        {
-          if(opzione.checked)
-          {
-            opzioneSelezionata = opzione;
-          }
-        }
         switch(opzioneSelezionata.value)
-*/
+        {
+          case "Si" :
+            if(struttura.AnimaliAmmessi == "No")
+            {
+              aggiungi = false;
+            }
+            break;
+
+          case "No" :
+            if(struttura.AnimaliAmmessi == "Si")
+            {
+              aggiungi = false;
+            }
+            break;
+          case "Indifferente" :
+            break;
+        }
         if(aggiungi == true)
         {
           listaStrutture.push(struttura);
@@ -135,14 +152,27 @@ for(let struttura of listaStrutture)
   rigaNome.value = struttura.Denominazione;
   rigaNome.textContent = rigaNome.value = struttura.Denominazione;
   row.appendChild(rigaNome)
-  let rigaNumero = document.createElement("td")
-  rigaNumero.value = struttura.Comune;
-  rigaNumero.textContent = rigaNumero.value = struttura.Comune;
-  row.appendChild(rigaNumero)
-  let rigaIndirizzo = document.createElement("td")
-  rigaIndirizzo.value = struttura.Indirizzo;
-  rigaIndirizzo.textContent = rigaIndirizzo.value = struttura.Indirizzo;
-  row.appendChild(rigaIndirizzo)
+  let rigaComune = document.createElement("td")
+  rigaComune.value = struttura.Comune;
+  rigaComune.textContent = rigaComune.value = struttura.Comune;
+  row.appendChild(rigaComune)
+  
+  let rigaSriaCondizionata = document.createElement("td")
+  rigaSriaCondizionata.value = struttura.AriaCondizionata;
+  rigaSriaCondizionata.textContent = rigaSriaCondizionata.value = struttura.AriaCondizionata;
+  row.appendChild(rigaSriaCondizionata)
+  
+  let rigaAnimaliAmmessi = document.createElement("td")
+  rigaAnimaliAmmessi.value = struttura.AnimaliAmmessi;
+  rigaAnimaliAmmessi.textContent = rigaAnimaliAmmessi.value = struttura.AnimaliAmmessi;
+  row.appendChild(rigaAnimaliAmmessi)
+
+  let rigaPiscina = document.createElement("td")
+  rigaPiscina.value = struttura.Piscina;
+  rigaPiscina.textContent = rigaPiscina.value = struttura.Piscina;
+  row.appendChild(rigaPiscina)
+  
+  
   tabella.appendChild(row)
 }
 let risultati = document.getElementById('risultati')
