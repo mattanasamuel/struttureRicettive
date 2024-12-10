@@ -35,12 +35,9 @@ async function loadInitialData() {
   }
 
   for (const sr of strutture) {
-    if (!listaProvincie.includes(sr.Provincia)) { //riempimento arrayProvincie da array strutture
+    if (!listaProvincie.includes(sr.Provincia)) 
+    { //riempimento arrayProvincie da array strutture
       listaProvincie.push(sr.Provincia);
-      let opt = document.createElement("option");
-      opt.value = sr.Provincia;
-      opt.textContent = sr.Provincia;
-      selProvincia.appendChild(opt);
     }
     /*
     if (!listaComuni.includes(sr.Comune)) {  //riempimento array comuni da array strutture
@@ -52,6 +49,17 @@ async function loadInitialData() {
     }
       */
   }
+  for(let provincia of listaProvincie)
+  {
+    let opt = document.createElement("option");
+    opt.value = provincia;
+    opt.textContent = provincia;
+    selProvincia.appendChild(opt);
+  }
+
+
+
+
 }
 
 
@@ -60,10 +68,11 @@ function loadComuni(){
   listaComuni = []
   for(const struttura of strutture)
   {
-      if(struttura.Provincia == selProvincia.value && !listaComuni.includes(struttura.Comune))
+      if(struttura.Provincia == selProvincia.value || selProvincia.value == "all")
       {
         //console.log(struttura.Provincia)
-        listaComuni.push(struttura.Comune)
+        if(!listaComuni.includes(struttura.Comune))
+          listaComuni.push(struttura.Comune)
       }
       /*
       else
@@ -72,7 +81,18 @@ function loadComuni(){
       }
         */
   }
+
+
   console.log(listaComuni)
+
+
+  //creazione dell'opzione standard "tutti"
+  let standard = document.createElement("option");
+  standard.value = "all";
+  standard.textContent = "--Seleziona comune della struttura--"
+  selComune.appendChild(standard)
+
+  
   for(const comune of listaComuni)
   {
     let opt = document.createElement("option")
@@ -100,9 +120,9 @@ function loadStrutture(){
 
   for(let struttura of strutture)
   {
-    if(struttura.Provincia == selProvincia.value)
+    if(struttura.Provincia == selProvincia.value || selProvincia.value == "all")
     {
-      if(struttura.Comune == selComune.value)
+      if(struttura.Comune == selComune.value || selComune.value == "all")
       {
         let aggiungi = true;
         if(piscina.checked)
