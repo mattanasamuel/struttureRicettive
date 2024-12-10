@@ -9,6 +9,12 @@ selProvincia.addEventListener("change", loadComuni);
 let tabella = document.getElementById('tabella');
 let carica = document.getElementById('btnLoad')
 carica.addEventListener("click", loadStrutture)
+let piscina = document.getElementById('esiste-piscina')
+let ariaCondizionata = document.getElementById('aria-condizionata') //proprietà checked booleana
+let animali = document.getElementsByName('animaliAmmessi') //ottengo una collezione di valori, tutti hanno nome "animali ammessi"
+
+  
+
 
 
 
@@ -94,6 +100,16 @@ function loadStrutture(){
     {
       if(struttura.Comune == selComune.value || selComune.value == "tutti") //se il valore della option è su "tutti", se la struttura fa parte della provincia selezionata viene caricata ugualmente, altrimenti viene verificata anche se il suo comune corrisponde al comune selezionato
       {
+        switch(piscina.checked)
+        {
+          case true:
+            if(struttura.piscina == "Si")
+            {
+
+            }
+        }
+
+
         listaStrutture.push(struttura);
       }
     }
@@ -146,4 +162,3 @@ else if(listaStrutture.length > 0)
 
 
 loadInitialData();
-
