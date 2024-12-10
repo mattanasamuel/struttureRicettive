@@ -2,13 +2,16 @@ var strutture = [];
 var listaProvincie = [];
 var listaComuni = [];
 var listaStrutture = []; //lista ottenuta dopo la filtratura per parametri di ricerca
-selProvincia = document.getElementById('sel-provincia'); //elemento select campo provincia
-selComune = document.getElementById('sel-comune'); //elemento select campo comune
+let selProvincia = document.getElementById('sel-provincia'); //elemento select campo provincia
+let selComune = document.getElementById('sel-comune'); //elemento select campo comune
 selProvincia.addEventListener("change", loadComuni);
 //selComune.addEventListener("change", loadStrutture);
 let tabella = document.getElementById('tabella');
 let carica = document.getElementById('btnLoad')
 carica.addEventListener("click", loadStrutture)
+let piscina = document.getElementById('esiste-piscina') //input type checkbox
+let ariaCondizionata = document.getElementById('aria-condizionata') //input type checkbox
+let animaliAmmessi = document.getElementsByName('animaliAmmessi')
 
 //tentativo numero 2
 
@@ -80,7 +83,7 @@ function loadComuni(){
 }
 
 
-
+//da modificare
 
 function loadStrutture(){
   tabella.innerHTML = ""
@@ -91,10 +94,39 @@ function loadStrutture(){
     {
       if(struttura.Comune == selComune.value)
       {
-        listaStrutture.push(struttura);
+        let aggiungi = true;
+        if(piscina.checked)
+        {
+          if(struttura.Piscina == "No")
+            aggiungi=false;
+        }
+        if(ariaCondizionata.checked)
+        {
+          if(struttura.AriaCondizionata == "No")
+          {
+            aggiungi = false;
+          }
+        }
+        /*
+        let opzioneSelezionata
+        for(let opzione of animaliAmmessi)
+        {
+          if(opzione.checked)
+          {
+            opzioneSelezionata = opzione;
+          }
+        }
+        switch(opzioneSelezionata.value)
+*/
+        if(aggiungi == true)
+        {
+          listaStrutture.push(struttura);
+        }
       }
     }
   }
+
+
 //ora è necessario creare la tabella dinamica
 for(let struttura of listaStrutture)
 {
