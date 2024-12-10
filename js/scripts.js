@@ -9,11 +9,11 @@ selProvincia.addEventListener("change", loadComuni);
 let tabella = document.getElementById('tabella');
 let carica = document.getElementById('btnLoad')
 carica.addEventListener("click", loadStrutture)
+
 let piscina = document.getElementById('esiste-piscina') //input type checkbox
 let ariaCondizionata = document.getElementById('aria-condizionata') //input type checkbox
 let animaliAmmessi = document.getElementsByName('animaliAmmessi')
 
-//tentativo numero 2
 
 
 async function loadInitialData() {
@@ -34,11 +34,21 @@ async function loadInitialData() {
     console.error(`Errore reperimento strutture recettive: ${error}`);
   }
 
+  listaProvincie.push("tutte") //lista provincie è un array di stringhe!!! servirà per valorizzare le option figlie di selectProvincia
   for (const sr of strutture) {
     if (!listaProvincie.includes(sr.Provincia)) 
     { //riempimento arrayProvincie da array strutture
       listaProvincie.push(sr.Provincia);
     }
+  }
+
+  for(let provincia of listaProvincie) //creazione delle opzioni del select "provincia"
+  {
+    let opt = document.createElement("option");
+    opt.value = provincia;
+    opt.textContent = provincia;
+    selProvincia.appendChild(opt);
+  }
     /*
     if (!listaComuni.includes(sr.Comune)) {  //riempimento array comuni da array strutture
       listaComuni.push(sr.Comune);
@@ -49,6 +59,7 @@ async function loadInitialData() {
     }
       */
   }
+
   for(let provincia of listaProvincie)
   {
     let opt = document.createElement("option");
@@ -63,27 +74,25 @@ async function loadInitialData() {
 }
 
 
+
 function loadComuni(){
   selComune.innerHTML = ""
   listaComuni = []
+  listaComuni.push("tutti")
   for(const struttura of strutture)
   {
+
       if(struttura.Provincia == selProvincia.value || selProvincia.value == "all")
       {
         //console.log(struttura.Provincia)
         if(!listaComuni.includes(struttura.Comune))
           listaComuni.push(struttura.Comune)
       }
-      /*
-      else
-      {
-        console.log("no " + struttura.Provincia)
-      }
-        */
   }
 
 
   console.log(listaComuni)
+
 
 
   //creazione dell'opzione standard "tutti"
@@ -92,7 +101,6 @@ function loadComuni(){
   standard.textContent = "--Seleziona comune della struttura--"
   selComune.appendChild(standard)
 
-  
   for(const comune of listaComuni)
   {
     let opt = document.createElement("option")
@@ -101,6 +109,7 @@ function loadComuni(){
     selComune.appendChild(opt);
   }
 }
+
 
 
 //da modificare
@@ -120,6 +129,7 @@ function loadStrutture(){
 
   for(let struttura of strutture)
   {
+
     if(struttura.Provincia == selProvincia.value || selProvincia.value == "all")
     {
       if(struttura.Comune == selComune.value || selComune.value == "all")
@@ -161,8 +171,22 @@ function loadStrutture(){
         }
       }
     }
+    //console.log(opzioneSelezionata)
+    switch(opzioneSelezionata.value)
+    {
+      case "Si":
+        if(struttura.animaliAmmessi == "No")
+          aggiungi = false;
+        break;
+      
+      case "No":
+        if(struttura.animaliAmmessi == "Si")
+          aggiungi = false;
+        break;
+    }
+    if(aggiungi)
+      listaStrutture.push(struttura);
   }
-
 
 //ora è necessario creare la tabella dinamica
 for(let struttura of listaStrutture)
@@ -208,21 +232,11 @@ else if(listaStrutture.length > 0)
 {
   risultati.style.color = "green"
 }
-
-
-
-
-
-
-
-
-
-
 }
 
 
 
 
 
-loadInitialData();
 
+loadInitialData()
