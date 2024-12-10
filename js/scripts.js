@@ -2,19 +2,17 @@ var strutture = [];
 var listaProvincie = [];
 var listaComuni = [];
 var listaStrutture = []; //lista ottenuta dopo la filtratura per parametri di ricerca
-selProvincia = document.getElementById('sel-provincia'); //elemento select campo provincia
-selComune = document.getElementById('sel-comune'); //elemento select campo comune
+let selProvincia = document.getElementById('sel-provincia'); //elemento select campo provincia
+let selComune = document.getElementById('sel-comune'); //elemento select campo comune
 selProvincia.addEventListener("change", loadComuni);
 //selComune.addEventListener("change", loadStrutture);
 let tabella = document.getElementById('tabella');
 let carica = document.getElementById('btnLoad')
 carica.addEventListener("click", loadStrutture)
-let piscina = document.getElementById('esiste-piscina')
-let ariaCondizionata = document.getElementById('aria-condizionata') //proprietà checked booleana
-let animali = document.getElementsByName('animaliAmmessi') //ottengo una collezione di valori, tutti hanno nome "animali ammessi"
 
-  
-
+let piscina = document.getElementById('esiste-piscina') //input type checkbox
+let ariaCondizionata = document.getElementById('aria-condizionata') //input type checkbox
+let animaliAmmessi = document.getElementsByName('animaliAmmessi')
 
 
 
@@ -38,7 +36,8 @@ async function loadInitialData() {
 
   listaProvincie.push("tutte") //lista provincie è un array di stringhe!!! servirà per valorizzare le option figlie di selectProvincia
   for (const sr of strutture) {
-    if (!listaProvincie.includes(sr.Provincia)) { //riempimento arrayProvincie da array strutture
+    if (!listaProvincie.includes(sr.Provincia)) 
+    { //riempimento arrayProvincie da array strutture
       listaProvincie.push(sr.Provincia);
     }
   }
@@ -61,6 +60,20 @@ async function loadInitialData() {
       */
   }
 
+  for(let provincia of listaProvincie)
+  {
+    let opt = document.createElement("option");
+    opt.value = provincia;
+    opt.textContent = provincia;
+    selProvincia.appendChild(opt);
+  }
+
+
+
+
+}
+
+
 
 function loadComuni(){
   selComune.innerHTML = ""
@@ -68,16 +81,25 @@ function loadComuni(){
   listaComuni.push("tutti")
   for(const struttura of strutture)
   {
-    //aggiunta dei comuni facenti parte della provincia su cui selectProvincia è valorizzato
-      if(struttura.Provincia == selProvincia.value && !listaComuni.includes(struttura.Comune))
+
+      if(struttura.Provincia == selProvincia.value || selProvincia.value == "all")
       {
         //console.log(struttura.Provincia)
-        listaComuni.push(struttura.Comune)
+        if(!listaComuni.includes(struttura.Comune))
+          listaComuni.push(struttura.Comune)
       }
   }
+
+
   console.log(listaComuni)
 
 
+
+  //creazione dell'opzione standard "tutti"
+  let standard = document.createElement("option");
+  standard.value = "all";
+  standard.textContent = "--Seleziona comune della struttura--"
+  selComune.appendChild(standard)
 
   for(const comune of listaComuni)
   {
@@ -89,26 +111,64 @@ function loadComuni(){
 }
 
 
+
+//da modificare
+
 function loadStrutture(){
   tabella.innerHTML = ""
   listaStrutture = []
+  let opzioneSelezionata
+  for(let opzione of animaliAmmessi)
+  {
+    if(opzione.checked)
+    {
+      opzioneSelezionata = opzione;
+    }
+  }
+  console.log(opzioneSelezionata.value)
+
   for(let struttura of strutture)
   {
-    let aggiungi = true;
-    if(selProvincia.value != struttura.Provincia && selProvincia.value != "tutte")
-      aggiungi = false;
-    if(selComune.value != struttura.Comune && selComune != "tutti")
-      aggiungi = false;
-    if(ariaCondizionata.checked == true && struttura.ariaCondizionata == "No")
-      aggiungi = false;
-    if(piscina.checked == true && struttura.piscina == "No")
-      aggiungi = false;
-    let opzioneSelezionata;
-    for(let opzione of animali)
+
+    if(struttura.Provincia == selProvincia.value || selProvincia.value == "all")
     {
-      if(opzione.checked)
+      if(struttura.Comune == selComune.value || selComune.value == "all")
       {
-        opzioneSelezionata = opzione;
+        let aggiungi = true;
+        if(piscina.checked)
+        {
+          if(struttura.Piscina == "No")
+            aggiungi=false;
+        }
+        if(ariaCondizionata.checked)
+        {
+          if(struttura.AriaCondizionata == "No")
+          {
+            aggiungi = false;
+          }
+        }
+        switch(opzioneSelezionata.value)
+        {
+          case "Si" :
+            if(struttura.AnimaliAmmessi == "No")
+            {
+              aggiungi = false;
+            }
+            break;
+
+          case "No" :
+            if(struttura.AnimaliAmmessi == "Si")
+            {
+              aggiungi = false;
+            }
+            break;
+          case "Indifferente" :
+            break;
+        }
+        if(aggiungi == true)
+        {
+          listaStrutture.push(struttura);
+        }
       }
     }
     //console.log(opzioneSelezionata)
@@ -128,10 +188,6 @@ function loadStrutture(){
       listaStrutture.push(struttura);
   }
 
-  console.log(listaStrutture)
-
-
-
 //ora è necessario creare la tabella dinamica
 for(let struttura of listaStrutture)
 {
@@ -140,14 +196,27 @@ for(let struttura of listaStrutture)
   rigaNome.value = struttura.Denominazione;
   rigaNome.textContent = rigaNome.value = struttura.Denominazione;
   row.appendChild(rigaNome)
-  let rigaNumero = document.createElement("td")
-  rigaNumero.value = struttura.Comune;
-  rigaNumero.textContent = rigaNumero.value = struttura.Comune;
-  row.appendChild(rigaNumero)
-  let rigaIndirizzo = document.createElement("td")
-  rigaIndirizzo.value = struttura.Indirizzo;
-  rigaIndirizzo.textContent = rigaIndirizzo.value = struttura.Indirizzo;
-  row.appendChild(rigaIndirizzo)
+  let rigaComune = document.createElement("td")
+  rigaComune.value = struttura.Comune;
+  rigaComune.textContent = rigaComune.value = struttura.Comune;
+  row.appendChild(rigaComune)
+  
+  let rigaSriaCondizionata = document.createElement("td")
+  rigaSriaCondizionata.value = struttura.AriaCondizionata;
+  rigaSriaCondizionata.textContent = rigaSriaCondizionata.value = struttura.AriaCondizionata;
+  row.appendChild(rigaSriaCondizionata)
+  
+  let rigaAnimaliAmmessi = document.createElement("td")
+  rigaAnimaliAmmessi.value = struttura.AnimaliAmmessi;
+  rigaAnimaliAmmessi.textContent = rigaAnimaliAmmessi.value = struttura.AnimaliAmmessi;
+  row.appendChild(rigaAnimaliAmmessi)
+
+  let rigaPiscina = document.createElement("td")
+  rigaPiscina.value = struttura.Piscina;
+  rigaPiscina.textContent = rigaPiscina.value = struttura.Piscina;
+  row.appendChild(rigaPiscina)
+  
+  
   tabella.appendChild(row)
 }
 let risultati = document.getElementById('risultati')
