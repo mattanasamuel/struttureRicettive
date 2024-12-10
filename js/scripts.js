@@ -54,9 +54,10 @@ async function loadInitialData() {
 function loadComuni(){
   selComune.innerHTML = ""
   listaComuni = []
-
+  listaComuni.push("tutti")
   for(const struttura of strutture)
   {
+    //aggiunta dei comuni facenti parte della provincia su cui selectProvincia è valorizzato
       if(struttura.Provincia == selProvincia.value && !listaComuni.includes(struttura.Comune))
       {
         //console.log(struttura.Provincia)
@@ -64,6 +65,9 @@ function loadComuni(){
       }
   }
   console.log(listaComuni)
+
+
+
   for(const comune of listaComuni)
   {
     let opt = document.createElement("option")
@@ -83,7 +87,7 @@ function loadStrutture(){
   {
     if(struttura.Provincia == selProvincia.value)
     {
-      if(struttura.Comune == selComune.value)
+      if(struttura.Comune == selComune.value || selComune.value == "tutti")
       {
         listaStrutture.push(struttura);
       }
