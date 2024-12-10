@@ -30,14 +30,20 @@ async function loadInitialData() {
     console.error(`Errore reperimento strutture recettive: ${error}`);
   }
 
+  listaProvincie.push("tutte") //lista provincie è un array di stringhe!!! servirà per valorizzare le option figlie di selectProvincia
   for (const sr of strutture) {
     if (!listaProvincie.includes(sr.Provincia)) { //riempimento arrayProvincie da array strutture
       listaProvincie.push(sr.Provincia);
-      let opt = document.createElement("option");
-      opt.value = sr.Provincia;
-      opt.textContent = sr.Provincia;
-      selProvincia.appendChild(opt);
     }
+  }
+
+  for(let provincia of listaProvincie) //creazione delle opzioni del select "provincia"
+  {
+    let opt = document.createElement("option");
+    opt.value = provincia;
+    opt.textContent = provincia;
+    selProvincia.appendChild(opt);
+  }
     /*
     if (!listaComuni.includes(sr.Comune)) {  //riempimento array comuni da array strutture
       listaComuni.push(sr.Comune);
@@ -48,7 +54,6 @@ async function loadInitialData() {
     }
       */
   }
-}
 
 
 function loadComuni(){
@@ -85,9 +90,9 @@ function loadStrutture(){
   listaStrutture = []
   for(let struttura of strutture)
   {
-    if(struttura.Provincia == selProvincia.value)
+    if(struttura.Provincia == selProvincia.value || selProvincia.value == "tutte")
     {
-      if(struttura.Comune == selComune.value || selComune.value == "tutti")
+      if(struttura.Comune == selComune.value || selComune.value == "tutti") //se il valore della option è su "tutti", se la struttura fa parte della provincia selezionata viene caricata ugualmente, altrimenti viene verificata anche se il suo comune corrisponde al comune selezionato
       {
         listaStrutture.push(struttura);
       }
