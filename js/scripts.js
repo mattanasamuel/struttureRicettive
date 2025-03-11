@@ -71,8 +71,6 @@ async function loadInitialData() {
 
 
 
-}
-
 
 
 function loadComuni(){
@@ -134,7 +132,7 @@ function loadStrutture(){
     {
       if(struttura.Comune == selComune.value || selComune.value == "all")
       {
-        let aggiungi = true;
+        var aggiungi = true;
         if(piscina.checked)
         {
           if(struttura.Piscina == "No")
@@ -184,7 +182,7 @@ function loadStrutture(){
           aggiungi = false;
         break;
     }
-    if(aggiungi)
+    if(aggiungi == true)
       listaStrutture.push(struttura);
   }
 
